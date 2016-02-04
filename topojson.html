@@ -1,0 +1,112 @@
+---
+layout: bootstrap
+title: Topojson
+permalink: /topojson/
+---
+<link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7/leaflet.css" />
+<!--
+http://stackoverflow.com/questions/26979066/mapbox-background-image
+http://bl.ocks.org/elsherbini/82a63315d0d7c0cca2cd#_include
+-->
+<style>
+html,
+body {
+  height: 100%;
+  margin: 0px;
+  padding: 0px
+}
+#map {
+  width: 100%;
+  min-height: 100%;
+  position: absolute;
+}
+#content {
+  position: absolute;
+}
+path {
+  stroke: #000;
+  stroke-linejoin: round;
+  stroke-linecap: round;
+}
+
+.zone.ID_00000 {fill:rgba(251,180,174,0.7);}
+.zone.ID_00001 {fill:rgba(155,255,204,0.7);}
+.zone.ID_00002 {fill:rgba(179,205,227,0.7);}
+.zone.ID_00003 {fill:rgba(204,235,197,0.7);}
+.zone.ID_00004 {fill:rgba(222,203,228,0.7);}
+.zone.ID_00005 {fill:rgba(254,217,166,0.7);}
+.zone.ID_00006 {fill:rgba(255,255,204,0.7);}
+
+</style>
+
+<div id="map"></div>
+<script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+<script src="http://d3js.org/d3.v3.min.js"></script>
+<script src="http://d3js.org/topojson.v1.js"></script>
+<script src="http://cdn.leafletjs.com/leaflet-0.7/leaflet.js"></script>
+<script>
+var map = L.map('map').setView([1.3447087,103.7946923], 11);
+mapLink = '<a href="http://openstreetmap.org">OpenStreetMap</a>';
+L.tileLayer(
+    //'http://{s}.tile.stamen.com/toner/{z}/{x}/{y}.jpg',
+    'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; ' + mapLink + ' Contributors',
+        maxZoom: 18,
+    }
+).addTo(map);
+
+// Add an SVG element to Leaflet’s overlay pane
+var svg = d3.select(map.getPanes().overlayPane).append("svg"),
+    g = svg.append("g").attr("class", "leaflet-zoom-hide");
+
+d3.json("{{ site.baseurl }}/data/sgtopojson.topojson", function(error, region) {
+
+    if (error) return console.error(error);
+    console.log(region);
+    var feats = topojson.feature(region, region.objects.region);
+
+    //  create a d3.geo.path to convert GeoJSON to SVG
+    var transform = d3.geo.transform({
+            point: projectPoint
+        }),
+        path = d3.geo.path().projection(transform);
+
+    // create path elements for each of the features
+    d3_features = g.selectAll("path")
+        .data(feats.features)
+        .enter().append("path");
+    console.log(feats.features);
+
+    //reset map
+    map.on("viewreset", reset);
+    reset();
+
+    // fit the SVG element to leaflet's map layer
+    function reset() {
+        bounds = path.bounds(feats);
+
+        var topLeft = bounds[0],
+            bottomRight = bounds[1];
+
+        svg.attr("width", bottomRight[0] - topLeft[0])
+            .attr("height", bottomRight[1] - topLeft[1])
+            .style("left", topLeft[0] + "px")
+            .style("top", topLeft[1] + "px");
+
+        g.attr("transform", "translate(" + -topLeft[0] + "," + -topLeft[1] + ")");
+
+        d3_features.attr("d", path)
+            .attr("class", function(d) {
+                return "zone " + d.id
+            })
+    }
+
+    // Use Leaflet to implement a D3 geometric transformation.
+    function projectPoint(x, y) {
+        var point = map.latLngToLayerPoint(new L.LatLng(y, x));
+        this.stream.point(point.x, point.y);
+    }
+
+})
+</script>
