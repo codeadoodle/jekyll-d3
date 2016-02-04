@@ -1,0 +1,31 @@
+{
+  "name": "bootleaf",
+  "version": "1.0.0",
+  "description": "Simplified Bootleaf for Jekyll",
+  "main": "index.html",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/codeadoodle/jekyll-bootleaf.git"
+  },
+  "keywords": [
+    "Bootstrap",
+    "Bootleaf"
+  ],
+  "author": "codeadoodle <codeadoodle@gmail.com> (http://codeadoodle.github.io)",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/codeadoodle/jekyll-bootleaf/issues"
+  },
+  "homepage": "https://github.com/codeadoodle/jekyll-bootleaf#readme",
+  "devDependencies": {
+    "grunt": "^0.4.5",
+    "grunt-build-control": "^0.6.2",
+    "grunt-contrib-connect": "^0.11.2",
+    "grunt-contrib-watch": "^0.6.1",
+    "grunt-jekyll": "^0.4.3",
+    "load-grunt-tasks": "^3.4.0"
+  }
+}

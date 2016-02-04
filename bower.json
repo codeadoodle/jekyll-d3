@@ -1,0 +1,23 @@
+{
+  "name": "bootleaf",
+  "version": "0.0.0",
+  "authors": [
+    "codeadoodle <codeadoodle@gmail.com>"
+  ],
+  "description": "Simplified Bootleaf for Jekyll",
+  "moduleType": [
+    "es6"
+  ],
+  "keywords": [
+    "Bootstrap",
+    "Bootleaf"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}
